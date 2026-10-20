@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ร้านฟาร์ม ANIME ZERO | บริการรับฟาร์ม ครบ จบ ในที่เดียว!</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts - Kanit -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: #e0f2fe;
+      background-image: radial-gradient(#bae6fd 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .anime-card {
+      background: rgba(255, 255, 255, 0.92);
+      border: 2px solid #bae6fd;
+      box-shadow: 0 8px 20px rgba(186, 230, 253, 0.4);
+      backdrop-filter: blur(8px);
+    }
+    .anime-btn-primary {
+      background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+      transition: all 0.2s ease-in-out;
+    }
+    .anime-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+    }
+    .fong-coin {
+      background: linear-gradient(135deg, #7dd3fc 0%, #0284c7 100%);
+      color: white;
+    }
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 6px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background-color: #7dd3fc;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="text-slate-800 min-h-screen pb-20 md:pb-6">
+
+  <!-- TOP NAVBAR -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-2 border-sky-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      
+      <!-- LOGO & BRAND -->
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full border-2 border-sky-400 overflow-hidden shadow-sm bg-sky-50">
+          <img id="site-logo" src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=150" alt="Anime Zero" class="w-full h-full object-cover">
+        </div>
+        <div>
+          <h1 id="site-title-text" class="font-bold text-xl md:text-2xl text-sky-600 tracking-wide flex items-center gap-1">
+            ร้านฟาร์ม ANIME ZERO ✨
+          </h1>
+          <p id="site-subtitle-text" class="text-xs text-sky-400">บริการรับฟาร์ม ครบ จบ ในที่เดียว!</p>
+        </div>
+      </div>
+
+      <!-- USER STATS & ACTIONS -->
+      <div class="flex items-center gap-3">
+        <!-- FONG COIN BADGE -->
+        <div class="fong-coin px-3 py-1.5 rounded-full flex items-center gap-2 font-semibold text-sm shadow-md">
+          <i class="fa-solid fa-coins text-amber-300"></i>
+          <span id="user-fong-balance">0</span>
+          <span class="text-xs opacity-90">ฟง</span>
+          <button onclick="openModal('topup-modal')" class="bg-white/20 hover:bg-white/30 rounded-full w-5 h-5 flex items-center justify-center text-xs ml-1">+</button>
+        </div>
+
+        <!-- USER PROFILE / LOGIN BUTTON -->
+        <div id="auth-btn-container">
+          <button onclick="openModal('auth-modal')" class="anime-btn-primary text-white text-xs md:text-sm px-4 py-2 rounded-xl font-medium shadow">
+            <i class="fa-solid fa-user-astronaut mr-1"></i> เข้าสู่ระบบ
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT SIDEBAR (DESKTOP NAVIGATION) -->
+    <aside class="hidden lg:block lg:col-span-3 space-y-4">
+      <div class="anime-card rounded-2xl p-4">
+        <h3 class="font-bold text-sky-700 mb-3 text-sm uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-compass"></i> เมนูหลัก
+        </h3>
+        <nav class="space-y-1">
+          <button onclick="switchTab('shop')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sky-700 bg-sky-50 font-medium hover:bg-sky-100 transition">
+            <i class="fa-solid fa-store w-5 text-sky-500"></i> หน้าหลัก / สินค้า
+          </button>
+          <button onclick="switchTab('cart')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-sky-50 transition">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-cart-shopping w-5 text-sky-500"></i> ตะกร้าสินค้า
+            </div>
+            <span id="cart-badge-sidebar" class="bg-sky-500 text-white text-xs px-2 py-0.5 rounded-full hidden">0</span>
+          </button>
+          <button onclick="switchTab('orders')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-sky-50 transition">
+            <i class="fa-solid fa-receipt w-5 text-sky-500"></i> คำสั่งซื้อของฉัน
+          </button>
+          <button onclick="switchTab('chat')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-sky-50 transition">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-comments w-5 text-sky-500"></i> กล่องข้อความแชท
+            </div>
+          </button>
+          <button onclick="openModal('share-modal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-sky-50 transition">
+            <i class="fa-solid fa-share-nodes w-5 text-sky-500"></i> แชร์เว็บ & QR Code
+          </button>
+          <div id="admin-menu-sidebar" class="hidden border-t border-sky-100 pt-2 mt-2">
+            <button onclick="switchTab('admin')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-pink-600 bg-pink-50 font-bold hover:bg-pink-100 transition">
+              <i class="fa-solid fa-user-shield w-5 text-pink-500"></i> หลังบ้านเจ้าของร้าน
+            </button>
+          </div>
+        </nav>
+      </div>
+
+      <!-- DECORATIVE ANIME CHARACTER CARD -->
+      <div class="anime-card rounded-2xl p-4 text-center relative overflow-hidden">
+        <img id="main-character-img" src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=300" alt="Character" class="w-32 h-32 mx-auto rounded-full object-cover border-4 border-sky-200 shadow-md mb-2">
+        <p class="text-xs text-sky-600 font-medium">" ยินดีต้อนรับสู่ร้าน ANIME ZERO นะคะ! ✨ "</p>
+      </div>
+    </aside>
+
+    <!-- CENTER CONTENT AREA -->
+    <section class="col-span-1 lg:col-span-9 space-y-6">
+
+      <!-- TAB: SHOP (MAIN STORE FRONT) -->
+      <div id="tab-shop" class="space-y-6">
+        
+        <!-- WELCOME BANNER & ANNOUNCEMENT -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+          <!-- BANNER -->
+          <div class="md:col-span-8 anime-card rounded-2xl p-6 bg-gradient-to-r from-sky-400 to-indigo-500 text-white relative overflow-hidden min-h-[160px] flex flex-col justify-center">
+            <h2 id="banner-welcome-text" class="text-2xl font-bold mb-2 drop-shadow">ยินดีต้อนรับสู่ร้านฟาร์ม ANIME ZERO! ❄️</h2>
+            <p class="text-sky-100 text-sm max-w-md mb-4">บริการรับฟาร์มเกมไอเทม สะดวกรวดเร็ว ปลอดภัย 100% โดยทีมงานมืออาชีพ</p>
+            <div>
+              <button onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})" class="bg-white text-sky-600 font-bold px-4 py-2 rounded-xl text-xs hover:bg-sky-50 shadow">
+                ดูบริการทั้งหมด
+              </button>
+            </div>
+          </div>
+
+          <!-- ANNOUNCEMENT BOX -->
+          <div class="md:col-span-4 anime-card rounded-2xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 text-sky-700 font-bold text-sm mb-2">
+                <i class="fa-solid fa-bullhorn text-amber-500"></i> ประกาศจากแอดมิน
+              </div>
+              <p id="announcement-text" class="text-xs text-slate-600 leading-relaxed">
+                ร้านเปิดให้บริการตามปกติ 24 ชม. ส่งงานไว ปลอดภัย ทักแชทสอบถามคิวงานกับแอดมินได้ตลอดเวลาเลยนะคะ~
+              </p>
+            </div>
+            <div class="text-[10px] text-sky-400 mt-2 text-right">— ทีมงาน ANIME ZERO</div>
+          </div>
+        </div>
+
+        <!-- CATEGORIES FILTER BAR -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin" id="category-bar">
+          <button onclick="filterCategory('all')" class="category-btn active px-4 py-2 rounded-xl text-xs font-semibold bg-sky-500 text-white shadow-sm whitespace-nowrap">
+            ทั้งหมด
+          </button>
+          <button onclick="filterCategory('ซื้อขาย')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 hover:bg-sky-50 whitespace-nowrap">
+            ซื้อขาย
+          </button>
+          <button onclick="filterCategory('บริการอื่นๆ')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 hover:bg-sky-50 whitespace-nowrap">
+            บริการอื่นๆ
+          </button>
+          <button onclick="filterCategory('ไอเทม')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 hover:bg-sky-50 whitespace-nowrap">
+            ไอเทม
+          </button>
+          <button onclick="filterCategory('ดันเจี้ยน')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 hover:bg-sky-50 whitespace-nowrap">
+            ดันเจี้ยน
+          </button>
+          <button onclick="filterCategory('ฟาร์มเงิน')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 hover:bg-sky-50 whitespace-nowrap">
+            ฟาร์มเงิน
+          </button>
+        </div>
+
+        <!-- PRODUCTS GRID -->
+        <div id="products-section">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-slate-700 text-lg flex items-center gap-2">
+              <i class="fa-solid fa-fire text-orange-500"></i> สินค้าและบริการยอดนิยม
+            </h3>
+            <span id="product-count-text" class="text-xs text-slate-500">กำลังโหลด...</span>
+          </div>
+
+          <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <!-- Product cards will be loaded here -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TAB: CART -->
+      <div id="tab-cart" class="hidden space-y-4">
+        <h2 class="text-xl font-bold text-sky-700 flex items-center gap-2">
+          <i class="fa-solid fa-cart-shopping"></i> ตะกร้าสินค้าของคุณ
+        </h2>
+        
+        <div class="anime-card rounded-2xl p-4">
+          <div id="cart-items-container" class="divide-y divide-sky-100">
+            <!-- Cart items loaded here -->
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-sky-100 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="text-slate-600 text-sm">
+              ราคารวมทั้งหมด: <span id="cart-total-price" class="text-xl font-bold text-sky-600 ml-2">0</span> ฟง
+            </div>
+            <div class="flex gap-2 w-full md:w-auto">
+              <button onclick="clearCart()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-semibold hover:bg-slate-200">
+                ล้างตะกร้า
+              </button>
+              <button onclick="checkoutCart()" class="anime-btn-primary flex-1 md:flex-initial text-white px-6 py-2 rounded-xl text-xs font-bold shadow">
+                ยืนยันการสั่งซื้อ
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: ORDERS -->
+      <div id="tab-orders" class="hidden space-y-4">
+        <h2 class="text-xl font-bold text-sky-700 flex items-center gap-2">
+          <i class="fa-solid fa-receipt"></i> ประวัติคำสั่งซื้อ
+        </h2>
+        <div id="orders-list-container" class="space-y-3">
+          <!-- Order list loaded here -->
+        </div>
+      </div>
+
+      <!-- TAB: CHAT -->
+      <div id="tab-chat" class="hidden space-y-4">
+        <h2 class="text-xl font-bold text-sky-700 flex items-center gap-2">
+          <i class="fa-solid fa-comments"></i> กล่องข้อความแชทกับแอดมิน
+        </h2>
+        <div class="anime-card rounded-2xl p-4 h-[450px] flex flex-col">
+          <div id="chat-messages-box" class="flex-1 overflow-y-auto space-y-3 pr-2 scrollbar-thin">
+            <!-- Chat messages loaded here -->
+          </div>
+          <div class="mt-3 pt-3 border-t border-sky-100 flex gap-2">
+            <input type="text" id="chat-input-msg" placeholder="พิมพ์ข้อความสอบถามแอดมิน..." class="flex-1 border border-sky-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-sky-400">
+            <button onclick="sendChatMessage()" class="anime-btn-primary text-white px-5 py-2 rounded-xl text-xs font-bold shadow">
+              ส่งข้อความ
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: ADMIN BACKEND -->
+      <div id="tab-admin" class="hidden space-y-6">
+        <div class="flex items-center justify-between bg-pink-500 text-white p-4 rounded-2xl shadow">
+          <div>
+            <h2 class="text-xl font-bold flex items-center gap-2">
+              <i class="fa-solid fa-user-shield"></i> ระบบจัดการหลังบ้าน (สำหรับเจ้าของร้าน)
+            </h2>
+            <p class="text-xs text-pink-100">จัดการสินค้า คำสั่งซื้อ ข้อความแชท และตั้งค่าร้านค้าได้เต็มรูปแบบ</p>
+          </div>
+          <button onclick="openModal('admin-invite-modal')" class="bg-white/20 hover:bg-white/30 text-white text-xs px-3 py-1.5 rounded-lg">
+            รหัสยืนยันแอดมิน
+          </button>
+        </div>
+
+        <!-- ADMIN ADD PRODUCT FORM -->
+        <div class="anime-card rounded-2xl p-5 space-y-4">
+          <h3 class="font-bold text-slate-700 text-md flex items-center gap-2">
+            <i class="fa-solid fa-plus-circle text-sky-500"></i> เพิ่มสินค้า / บริการใหม่
+          </h3>
+          <form id="admin-add-product-form" onsubmit="adminAddProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="block font-medium text-slate-600 mb-1">ชื่อสินค้า</label>
+              <input type="text" id="adm-p-title" required class="w-full border rounded-xl p-2">
+            </div>
+            <div>
+              <label class="block font-medium text-slate-600 mb-1">หมวดหมู่</label>
+              <select id="adm-p-category" class="w-full border rounded-xl p-2">
+                <option value="ซื้อขาย">ซื้อขาย</option>
+                <option value="บริการอื่นๆ">บริการอื่นๆ</option>
+                <option value="ไอเทม">ไอเทม</option>
+                <option value="ดันเจี้ยน">ดันเจี้ยน</option>
+                <option value="ฟาร์มเงิน">ฟาร์มเงิน</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-medium text-slate-600 mb-1">ราคา (เหรียญฟง)</label>
+              <input type="number" id="adm-p-price" required class="w-full border rounded-xl p-2">
+            </div>
+            <div>
+              <label class="block font-medium text-slate-600 mb-1">รางวัลฟงที่จะได้รับหลังสำเร็จ</label>
+              <input type="number" id="adm-p-reward" value="5" class="w-full border rounded-xl p-2">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block font-medium text-slate-600 mb-1">เลือกรูปภาพสินค้าจากเครื่อง (หรือใส่ URL)</label>
+              <div class="flex gap-2">
+                <input type="file" id="adm-p-file" accept="image/*" class="w-full border rounded-xl p-1.5 text-xs">
+                <input type="url" id="adm-p-imgurl" placeholder="หรือวางลิงก์รูปภาพ..." class="w-full border rounded-xl p-2">
+              </div>
+            </div>
+            <div class="md:col-span-2">
+              <label class="block font-medium text-slate-600 mb-1">รายละเอียดสินค้า</label>
+              <textarea id="adm-p-desc" rows="2" class="w-full border rounded-xl p-2"></textarea>
+            </div>
+            <div class="md:col-span-2 text-right">
+              <button type="submit" class="anime-btn-primary text-white font-bold px-6 py-2 rounded-xl text-xs shadow">
+                + บันทึกเพิ่มสินค้า
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- ADMIN ORDERS MANAGEMENT -->
+        <div class="anime-card rounded-2xl p-5 space-y-4">
+          <h3 class="font-bold text-slate-700 text-md flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-sky-500"></i> รายการคำสั่งซื้อทั้งหมดของลูกค้า
+          </h3>
+          <div id="admin-orders-list" class="space-y-3">
+            <!-- Admin orders loaded here -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- MOBILE BOTTOM NAVIGATION BAR -->
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-sky-200 z-40 px-2 py-1.5 flex justify-around items-center text-[10px] text-slate-500 font-medium shadow-lg">
+    <button onclick="switchTab('shop')" class="flex flex-col items-center p-1 text-sky-600">
+      <i class="fa-solid fa-store text-base mb-0.5"></i>
+      <span>หน้าหลัก</span>
+    </button>
+    <button onclick="switchTab('cart')" class="flex flex-col items-center p-1 relative">
+      <i class="fa-solid fa-cart-shopping text-base mb-0.5"></i>
+      <span>ตะกร้า</span>
+      <span id="cart-badge-mobile" class="absolute top-0 right-1 bg-sky-500 text-white text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center hidden">0</span>
+    </button>
+    <button onclick="switchTab('orders')" class="flex flex-col items-center p-1">
+      <i class="fa-solid fa-receipt text-base mb-0.5"></i>
+      <span>คำสั่งซื้อ</span>
+    </button>
+    <button onclick="switchTab('chat')" class="flex flex-col items-center p-1">
+      <i class="fa-solid fa-comments text-base mb-0.5"></i>
+      <span>แชท</span>
+    </button>
+    <button onclick="openModal('share-modal')" class="flex flex-col items-center p-1">
+      <i class="fa-solid fa-share-nodes text-base mb-0.5"></i>
+      <span>แชร์</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: SHARE & QR CODE -->
+  <div id="share-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="anime-card rounded-2xl max-w-sm w-full p-6 text-center space-y-4">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="font-bold text-sky-700">แชร์เว็บไซต์ร้าน ANIME ZERO</h3>
+        <button onclick="closeModal('share-modal')" class="text-slate-400 hover:text-slate-600">&times;</button>
+      </div>
+      <div id="qrcode-container" class="flex justify-center p-3 bg-white rounded-xl shadow-inner border w-44 h-44 mx-auto"></div>
+      <p class="text-xs text-slate-500">สแกน QR Code เพื่อเปิดร้านบนมือถือได้ทันที!</p>
+      <div class="flex gap-2">
+        <input type="text" id="share-url-input" readonly class="flex-1 border rounded-xl px-2 py-1.5 text-xs text-slate-600 bg-slate-50">
+        <button onclick="copyShareUrl()" class="anime-btn-primary text-white text-xs px-3 py-1.5 rounded-xl font-bold shadow">
+          คัดลอกลิงก์
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: AUTH / LOGIN -->
+  <div id="auth-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="anime-card rounded-2xl max-w-xs w-full p-6 space-y-4">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="font-bold text-sky-700">เข้าสู่ระบบ / สมัครสมาชิก</h3>
+        <button onclick="closeModal('auth-modal')" class="text-slate-400 hover:text-slate-600">&times;</button>
+      </div>
+      <form onsubmit="handleAuthLogin(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-medium mb-1">ชื่อผู้ใช้งาน (Username)</label>
+          <input type="text" id="auth-username" required class="w-full border rounded-xl p-2">
+        </div>
+        <div>
+          <label class="block font-medium mb-1">รหัสผ่าน</label>
+          <input type="password" id="auth-password" required class="w-full border rounded-xl p-2">
+        </div>
+        <button type="submit" class="anime-btn-primary w-full text-white font-bold py-2 rounded-xl shadow">
+          เข้าสู่ระบบ
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADMIN INITIAL CODE VERIFY -->
+  <div id="admin-invite-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="anime-card rounded-2xl max-w-xs w-full p-6 space-y-4">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="font-bold text-pink-600">ยืนยันสิทธิ์แอดมินเจ้าของร้าน</h3>
+        <button onclick="closeModal('admin-invite-modal')" class="text-slate-400 hover:text-slate-600">&times;</button>
+      </div>
+      <form onsubmit="verifyAdminCode(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-medium mb-1">กรอกรหัสเชิญแอดมินเจ้าของร้าน</label>
+          <input type="password" id="admin-code-input" placeholder="ใส่รหัสเชิญเริ่มต้น..." required class="w-full border rounded-xl p-2">
+        </div>
+        <button type="submit" class="bg-pink-500 hover:bg-pink-600 w-full text-white font-bold py-2 rounded-xl shadow">
+          ยืนยันสิทธิ์
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    // INITIAL SYSTEM DATA
+    let defaultProducts = [
+      { id: '1', title: 'รับทำตัวละคร จิสะ', category: 'ซื้อขาย', price: 100, reward: 5, img: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=300', desc: 'บริการรับปั้นตัวละครจิสะ ของครบ รวดเร็วทันใจ' },
+      { id: '2', title: 'ฮีโร่ตัวละคร จิสะ', category: 'ซื้อขาย', price: 125, reward: 5, img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300', desc: 'ปลดล็อกฮีโร่สายโหดพร้อมลุยทุกคอนเทนต์' },
+      { id: '3', title: 'เหมาจิสะ (ตัว+อีโว)', category: 'ซื้อขาย', price: 200, reward: 10, img: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=300', desc: 'แพ็กเกจสุดคุ้ม ได้ทั้งตัวละครและวัตถุดิบวิวัฒนาการ' },
+      { id: '4', title: 'ชาแฮอิน', category: 'ซื้อขาย', price: 50, reward: 5, img: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=300', desc: 'ตัวละครยอดนิยม สายดาบโจมตีรุนแรง' },
+      { id: '5', title: 'ลงดันอื่น ๆ', category: 'ดันเจี้ยน', price: 1, reward: 1, img: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300', desc: 'รับลงดันเจี้ยนคิดราคาเป็นรอบๆ การันตีผ่าน 100%' },
+      { id: '6', title: 'ฟาร์มเงิน M', category: 'ฟาร์มเงิน', price: 17, reward: 2, img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300', desc: 'บริการฟาร์มเงินในเกม คิดราคาต่อ 1M' }
+    ];
+
+    let currentUser = { username: 'ลูกค้าทั่วไป', fong: 0, isAdmin: false };
+    let cart = [];
+    let orders = [];
+    let chatMessages = [
+      { sender: 'แอดมิน', text: 'สวัสดีค่ะ! สอบถามคิวฟาร์มหรือปรึกษาได้เลยนะคะ 💕', time: '10:00' }
+    ];
+
+    // APP INIT
+    window.addEventListener('DOMContentLoaded', () => {
+      loadLocalStorageData();
+      renderProducts('all');
+      renderCart();
+      renderOrders();
+      renderChat();
+      setupQRCode();
+    });
+
+    function loadLocalStorageData() {
+      const savedProducts = localStorage.getItem('az_products');
+      if (savedProducts) defaultProducts = JSON.parse(savedProducts);
+      
+      const savedUser = localStorage.getItem('az_user');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        updateUserUI();
+      }
+
+      const savedCart = localStorage.getItem('az_cart');
+      if (savedCart) cart = JSON.parse(savedCart);
+
+      const savedOrders = localStorage.getItem('az_orders');
+      if (savedOrders) orders = JSON.parse(savedOrders);
+    }
+
+    function saveProducts() {
+      localStorage.setItem('az_products', JSON.stringify(defaultProducts));
+    }
+
+    function saveUser() {
+      localStorage.setItem('az_user', JSON.stringify(currentUser));
+    }
+
+    function saveOrders() {
+      localStorage.setItem('az_orders', JSON.stringify(orders));
+    }
+
+    // TAB NAVIGATION
+    function switchTab(tabName) {
+      const tabs = ['shop', 'cart', 'orders', 'chat', 'admin'];
+      tabs.forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        if (el) el.classList.add('hidden');
+      });
+      const activeEl = document.getElementById(`tab-${tabName}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      if (tabName === 'admin' && !currentUser.isAdmin) {
+        openModal('admin-invite-modal');
+      }
+    }
+
+    // RENDER PRODUCTS
+    function renderProducts(category) {
+      const grid = document.getElementById('products-grid');
+      grid.innerHTML = '';
+      
+      const filtered = category === 'all' 
+        ? defaultProducts 
+        : defaultProducts.filter(p => p.category === category);
+
+      document.getElementById('product-count-text').innerText = `แสดง ${filtered.length} รายการ`;
+
+      filtered.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'anime-card rounded-2xl overflow-hidden hover:shadow-lg transition flex flex-col justify-between';
+        card.innerHTML = `
+          <div>
+            <div class="h-36 overflow-hidden relative">
+              <img src="${p.img}" alt="${p.title}" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-sky-500/80 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
+                ${p.category}
+              </span>
+            </div>
+            <div class="p-3">
+              <h4 class="font-bold text-slate-800 text-sm mb-1">${p.title}</h4>
+              <p class="text-[11px] text-slate-500 line-clamp-2 mb-2">${p.desc}</p>
+            </div>
+          </div>
+          <div class="p-3 pt-0 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-sky-600">${p.price}</span>
+              <span class="text-[10px] text-slate-400">ฟง</span>
+            </div>
+            <button onclick="addToCart('${p.id}')" class="anime-btn-primary text-white text-xs px-3 py-1.5 rounded-xl font-bold shadow">
+              ซื้อเลย
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterCategory(cat) {
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('bg-sky-500', 'text-white');
+        btn.classList.add('bg-white', 'text-slate-600');
+      });
+      event.target.classList.remove('bg-white', 'text-slate-600');
+      event.target.classList.add('bg-sky-500', 'text-white');
+      renderProducts(cat);
+    }
+
+    // CART SYSTEM
+    function addToCart(productId) {
+      const item = defaultProducts.find(p => p.id === productId);
+      if (item) {
+        cart.push(item);
+        localStorage.setItem('az_cart', JSON.stringify(cart));
+        renderCart();
+        alert(`เพิ่ม "${item.title}" ลงตะกร้าแล้ว!`);
+      }
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cart-items-container');
+      container.innerHTML = '';
+      let total = 0;
+
+      if (cart.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-400 text-center py-6">ไม่มีสินค้าในตะกร้า</p>';
+      } else {
+        cart.forEach((item, index) => {
+          total += Number(item.price);
+          const row = document.createElement('div');
+          row.className = 'py-3 flex items-center justify-between text-xs';
+          row.innerHTML = `
+            <div class="flex items-center gap-3">
+              <img src="${item.img}" class="w-10 h-10 rounded-lg object-cover">
+              <div>
+                <p class="font-bold text-slate-700">${item.title}</p>
+                <p class="text-sky-600 font-semibold">${item.price} ฟง</p>
+              </div>
+            </div>
+            <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          `;
+          container.appendChild(row);
+        });
+      }
+
+      document.getElementById('cart-total-price').innerText = total;
+      
+      const badgeMobile = document.getElementById('cart-badge-mobile');
+      const badgeSidebar = document.getElementById('cart-badge-sidebar');
+      if (cart.length > 0) {
+        badgeMobile.innerText = cart.length;
+        badgeMobile.classList.remove('hidden');
+        badgeSidebar.innerText = cart.length;
+        badgeSidebar.classList.remove('hidden');
+      } else {
+        badgeMobile.classList.add('hidden');
+        badgeSidebar.classList.add('hidden');
+      }
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      localStorage.setItem('az_cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      localStorage.setItem('az_cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    function checkoutCart() {
+      if (cart.length === 0) {
+        alert('ตะกร้าของคุณยังไม่มีสินค้า');
+        return;
+      }
+
+      const total = cart.reduce((sum, i) => sum + Number(i.price), 0);
+      if (currentUser.fong < total) {
+        alert(`ยอดเหรียญฟงไม่พอ (ต้องการ ${total} ฟง, คุณมี ${currentUser.fong} ฟง)\nกรุณาติดต่อแอดมินเพื่อเติมเหรียญก่อนนะคะ`);
+        return;
+      }
+
+      currentUser.fong -= total;
+      saveUser();
+      updateUserUI();
+
+      const newOrder = {
+        id: 'AZ-' + Math.floor(1000 + Math.random() * 9000),
+        items: [...cart],
+        total: total,
+        status: 'กำลังดำเนินการ',
+        date: new Date().toLocaleDateString('th-TH')
+      };
+
+      orders.unshift(newOrder);
+      saveOrders();
+      clearCart();
+      renderOrders();
+      renderAdminOrders();
+
+      alert(`สั่งซื้อสำเร็จ! หมายเลขคำสั่งซื้อ: ${newOrder.id}`);
+      switchTab('orders');
+    }
+
+    // ORDERS SYSTEM
+    function renderOrders() {
+      const container = document.getElementById('orders-list-container');
+      container.innerHTML = '';
+
+      if (orders.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-400 text-center py-6">ยังไม่มีประวัติการสั่งซื้อ</p>';
+        return;
+      }
+
+      orders.forEach(o => {
+        const card = document.createElement('div');
+        card.className = 'anime-card rounded-2xl p-4 space-y-2 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-center font-bold border-b pb-2">
+            <span class="text-sky-600">คำสั่งซื้อ #${o.id}</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] ${o.status === 'สำเร็จ' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">${o.status}</span>
+          </div>
+          <div class="text-slate-600">
+            รายการ: ${o.items.map(i => i.title).join(', ')}
+          </div>
+          <div class="flex justify-between items-center text-slate-400 pt-1">
+            <span>วันที่: ${o.date}</span>
+            <span class="font-bold text-sky-600">ราคารวม: ${o.total} ฟง</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // CHAT SYSTEM
+    function renderChat() {
+      const box = document.getElementById('chat-messages-box');
+      box.innerHTML = '';
+      chatMessages.forEach(m => {
+        const isMe = m.sender === currentUser.username;
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} text-xs space-y-1`;
+        msgDiv.innerHTML = `
+          <span class="text-[10px] text-slate-400">${m.sender} • ${m.time}</span>
+          <div class="px-3 py-2 rounded-2xl max-w-[80%] ${isMe ? 'bg-sky-500 text-white' : 'bg-slate-100 text-slate-700'}">
+            ${m.text}
+          </div>
+        `;
+        box.appendChild(msgDiv);
+      });
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input-msg');
+      if (!input.value.trim()) return;
+
+      const time = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+      chatMessages.push({ sender: currentUser.username, text: input.value, time: time });
+      input.value = '';
+      renderChat();
+
+      // AUTO BOT REPLY
+      setTimeout(() => {
+        chatMessages.push({ sender: 'แอดมิน', text: 'รับทราบค่ะ! แอดมินกำลังตรวจสอบข้อมูลให้อยู่นะคะ 💕', time: time });
+        renderChat();
+      }, 1000);
+    }
+
+    // ADMIN SYSTEM
+    function verifyAdminCode(e) {
+      e.preventDefault();
+      const code = document.getElementById('admin-code-input').value;
+      if (code === 'ฟง888.') {
+        currentUser.isAdmin = true;
+        saveUser();
+        updateUserUI();
+        closeModal('admin-invite-modal');
+        alert('ยืนยันสิทธิ์ผู้ดูแลระบบสำเร็จ!');
+        switchTab('admin');
+        renderAdminOrders();
+      } else {
+        alert('รหัสเชิญไม่ถูกต้อง!');
+      }
+    }
+
+    function adminAddProduct(e) {
+      e.preventDefault();
+      const title = document.getElementById('adm-p-title').value;
+      const category = document.getElementById('adm-p-category').value;
+      const price = document.getElementById('adm-p-price').value;
+      const reward = document.getElementById('adm-p-reward').value;
+      const desc = document.getElementById('adm-p-desc').value;
+      const imgUrlInput = document.getElementById('adm-p-imgurl').value;
+      const fileInput = document.getElementById('adm-p-file');
+
+      let finalImg = imgUrlInput || 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=300';
+
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          finalImg = e.target.result;
+          saveNewProduct({ id: Date.now().toString(), title, category, price, reward, img: finalImg, desc });
+        }
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        saveNewProduct({ id: Date.now().toString(), title, category, price, reward, img: finalImg, desc });
+      }
+    }
+
+    function saveNewProduct(newP) {
+      defaultProducts.unshift(newP);
+      saveProducts();
+      renderProducts('all');
+      alert('เพิ่มสินค้าสำเร็จ!');
+      document.getElementById('admin-add-product-form').reset();
+    }
+
+    function renderAdminOrders() {
+      const container = document.getElementById('admin-orders-list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (orders.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">ไม่มีคำสั่งซื้อ</p>';
+        return;
+      }
+
+      orders.forEach(o => {
+        const item = document.createElement('div');
+        item.className = 'border rounded-xl p-3 text-xs flex items-center justify-between bg-white';
+        item.innerHTML = `
+          <div>
+            <p class="font-bold text-sky-600">Order #${o.id} (${o.total} ฟง)</p>
+            <p class="text-slate-500">${o.items.map(i => i.title).join(', ')}</p>
+          </div>
+          <button onclick="markOrderComplete('${o.id}')" class="bg-green-500 text-white px-3 py-1 rounded-lg text-[10px]">
+            ยืนยันสำเร็จ & แจกเหรียญ
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function markOrderComplete(orderId) {
+      const o = orders.find(x => x.id === orderId);
+      if (o) {
+        o.status = 'สำเร็จ';
+        currentUser.fong += 5; // Reward fong
+        saveUser();
+        saveOrders();
+        updateUserUI();
+        renderOrders();
+        renderAdminOrders();
+        alert(`อัปเดตคำสั่งซื้อ #${orderId} สำเร็จเรียบร้อยแล้วค่ะ!`);
+      }
+    }
+
+    // AUTH LOGIN SYSTEM
+    function handleAuthLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById('auth-username').value;
+      currentUser.username = u;
+      currentUser.fong = 100; // Free welcome coins
+      saveUser();
+      updateUserUI();
+      closeModal('auth-modal');
+      alert(`ยินดีต้อนรับคุณ ${u}! ได้รับเหรียญต้อนรับ 100 ฟง`);
+    }
+
+    function updateUserUI() {
+      document.getElementById('user-fong-balance').innerText = currentUser.fong;
+      const btnContainer = document.getElementById('auth-btn-container');
+      btnContainer.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-sky-700">${currentUser.username}</span>
+          ${currentUser.isAdmin ? '<span class="bg-pink-500 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">ADMIN</span>' : ''}
+        </div>
+      `;
+
+      if (currentUser.isAdmin) {
+        document.getElementById('admin-menu-sidebar').classList.remove('hidden');
+      }
+    }
+
+    // SHARE & QR CODE
+    function setupQRCode() {
+      const url = window.location.href;
+      document.getElementById('share-url-input').value = url;
+      new QRCode(document.getElementById("qrcode-container"), {
+        text: url,
+        width: 160,
+        height: 160
+      });
+    }
+
+    function copyShareUrl() {
+      const input = document.getElementById('share-url-input');
+      input.select();
+      document.execCommand('copy');
+      alert('คัดลอกลิงก์ร้านค้าเรียบร้อยแล้ว!');
+    }
+
+    // MODAL UTILS
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
